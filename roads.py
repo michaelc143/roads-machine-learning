@@ -1,3 +1,7 @@
+"""
+This file is used to generate a machine learning model that can identify
+whether or not an image of a road is clean or dirty.
+"""
 import os
 import numpy as np
 import pandas as pd
@@ -7,13 +11,14 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from tensorflow.keras.callbacks import LearningRateScheduler
 
 # Load metadata CSV
-metadata_path = 'metadata.csv'
-df = pd.read_csv(metadata_path)
+METADATA_PATH = 'metadata.csv'
+df = pd.read_csv(METADATA_PATH)
 
 # Directory containing all images
-image_dir = 'images/'
+IMAGE_DIR = 'images/'
 
 # Load and preprocess images
 image_size = (128, 128)
@@ -21,7 +26,7 @@ images = []
 labels = []
 
 for index, row in df.iterrows():
-    img_path = os.path.join(image_dir, row['filename'])
+    img_path = os.path.join(IMAGE_DIR, row['filename'])
     img = cv2.imread(img_path)
     img = cv2.resize(img, image_size)
     img = img / 255.0  # Normalize pixel values
@@ -49,19 +54,48 @@ model = Sequential([
     Dense(1, activation='sigmoid')
 ])
 
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+def lr_schedule(epoch):
+    """
+    Learning rate schedule function.
+    This function computes a learning rate adjustment based on the epoch number,
+    using a step-wise decay strategy. The learning rate is reduced by a fixed drop_rate
+    after every epochs_drop epochs.
+
+    Parameters:
+        epoch (int): The current epoch number.
+
+    Returns:
+        float: The adjusted learning rate for the current epoch.
+    """
+    initial_lr = 0.001
+    drop_rate = 0.65
+    epochs_drop = 10
+    lr = initial_lr * np.power(drop_rate, np.floor((1 + epoch) / epochs_drop))
+    return lr
+
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])
+
+# Learning rate scheduling callback
+lr_scheduler = LearningRateScheduler(lr_schedule)
+
+# Hyper param that makes model stop learning once val_loss has stopped decreasing.
+early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
 
 # Step 7: Training
-batch_size = 32
-epochs = 100
+batch_size = 64
+epochs = 200
 
-datagen = ImageDataGenerator(rotation_range=20, width_shift_range=0.2, height_shift_range=0.2, horizontal_flip=True)
-datagen.fit(X_train)
+data_gen = ImageDataGenerator(rotation_range=20, width_shift_range=0.2, height_shift_range=0.2, horizontal_flip=True)
+data_gen.fit(X_train)
 
-model.fit(datagen.flow(X_train, y_train, batch_size=batch_size), 
+model.fit(data_gen.flow(X_train, y_train, batch_size=batch_size),
           steps_per_epoch=len(X_train) // batch_size, epochs=epochs,
-          validation_data=(X_val, y_val))
+          validation_data=(X_val, y_val), callbacks=[lr_scheduler, early_stopping])
 
 # Step 8: Evaluation
 loss, accuracy = model.evaluate(X_test, y_test)
 print(f"Test loss: {loss:.4f}, Test accuracy: {accuracy:.4f}")
+
+# Save the trained model
+model.save('road_classifier_model.keras')
+print("New model saves to road_classifier_model.keras")

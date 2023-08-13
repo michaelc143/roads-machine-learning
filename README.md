@@ -33,3 +33,9 @@ This will install all the required dependencies needed to run the project.
 ```bash
 python3 roads.py
 ```
+
+- The roads.py file outputs a model to road_classifier_model.keras, currently this model has scored:
+
+```bash
+Test loss: 0.3430, Test accuracy: 0.8889
+```
