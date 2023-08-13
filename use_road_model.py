@@ -4,6 +4,7 @@ from tensorflow.keras.models import load_model
 
 # Load the saved model
 # TODO: NEED TO FIX FOR MODEL THAT CAN BUILD
+
 loaded_model = load_model('road_classifier_model.keras')
 
 # Load and preprocess new images
