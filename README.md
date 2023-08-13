@@ -8,7 +8,7 @@ git clone https://github.com/michaelc143/roads-machine-learning.git
 
 This will create a local directory with all the files you need to get started.
 
--To start working with the project, make sure you have python installed:
+- To start working with the project, make sure you have python installed:
 
 ```bash
 python3 -v
