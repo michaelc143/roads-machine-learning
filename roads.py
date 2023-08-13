@@ -73,7 +73,7 @@ def lr_schedule(epoch):
     lr = initial_lr * np.power(drop_rate, np.floor((1 + epoch) / epochs_drop))
     return lr
 
-model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=tf.keras.optimizers.Nadam(learning_rate=0.001), loss='binary_crossentropy', metrics=['accuracy'])
 
 # Learning rate scheduling callback
 lr_scheduler = LearningRateScheduler(lr_schedule)
@@ -82,7 +82,7 @@ lr_scheduler = LearningRateScheduler(lr_schedule)
 early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
 
 # Step 7: Training
-batch_size = 64
+batch_size = 8
 epochs = 200
 
 data_gen = ImageDataGenerator(rotation_range=20, width_shift_range=0.2, height_shift_range=0.2, horizontal_flip=True)
