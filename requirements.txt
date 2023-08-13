@@ -1,5 +1,6 @@
 pandas
 tensorflow
 numpy
+sklearn
 matplotlib
 opencv-python
