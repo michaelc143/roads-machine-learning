@@ -1,11 +1,32 @@
 """
-This file is used to generate a machine learning model that can identify
-whether or not an image of a road is clean or dirty.
+This script demonstrates the process of building, training, and evaluating a road classifier model using TensorFlow and Keras.
+
+It performs the following steps:
+1. Imports necessary libraries, including TensorFlow, NumPy, Pandas, OpenCV, and scikit-learn.
+2. Loads metadata from a CSV file containing image filenames and labels.
+3. Loads and preprocesses images, resizing them to a specified size and normalizing pixel values.
+4. Splits the data into training, validation, and test sets using scikit-learn's train_test_split function.
+5. Constructs a Convolutional Neural Network (CNN) model using Keras Sequential API.
+6. Compiles the model using the Nadam optimizer and binary cross-entropy loss.
+7. Defines a learning rate scheduling function and associated callbacks for training.
+8. Augments training data using image data augmentation techniques.
+9. Fits the model to the training data using the augmented generator and monitors validation loss for early stopping.
+10. Evaluates the trained model on the test set and prints the test loss and accuracy.
+11. Saves the trained model to a file named 'road_classifier_model.keras'.
+
+Author: [Your Name]
+
+Usage:
+1. Ensure the 'metadata.csv' file and image files are available.
+2. Set the 'IMAGE_DIR' and 'METADATA_PATH' variables to appropriate paths.
+3. Adjust hyperparameters and model architecture if needed.
+4. Run the script to train the model and evaluate its performance.
 """
 import os
 import numpy as np
 import pandas as pd
 import cv2
+from google.cloud import storage
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -13,8 +34,17 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.callbacks import LearningRateScheduler
 
+# GCP setup to grab from bucket storage
+storage_client = storage.Client()
+bucket_name = 'clean_dirty_road_ml_bucket'
+
+bucket = storage_client.bucket(bucket_name)
+blob = bucket.blob('metadata.csv')
+blob.download_to_filename('test-pull-from-gcp.csv')
+print('Pulled from GCP, check files')
+
 # Load metadata CSV
-METADATA_PATH = 'metadata.csv'
+METADATA_PATH = 'test-pull-from-gcp.csv'
 df = pd.read_csv(METADATA_PATH)
 
 # Directory containing all images
