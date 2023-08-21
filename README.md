@@ -37,5 +37,5 @@ python3 roads.py
 - The roads.py file outputs a model to road_classifier_model.keras, currently this model has scored:
 
 ```bash
-Test loss: 0.3430, Test accuracy: 0.8889
+Test loss: 0.1244, Test accuracy: 0.9722
 ```
