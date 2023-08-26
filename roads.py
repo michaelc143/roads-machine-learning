@@ -14,7 +14,7 @@ It performs the following steps:
 10. Evaluates the trained model on the test set and prints the test loss and accuracy.
 11. Saves the trained model to a file named 'road_classifier_model.keras'.
 
-Author: [Your Name]
+Author: [Michael Corbishley]
 
 Usage:
 1. Ensure the 'metadata.csv' file and image files are available.
