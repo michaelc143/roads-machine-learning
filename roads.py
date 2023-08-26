@@ -1,5 +1,6 @@
 """
-This script demonstrates the process of building, training, and evaluating a road classifier model using TensorFlow and Keras.
+This script demonstrates the process of building, training, and 
+evaluating a road classifier model using TensorFlow and Keras.
 
 It performs the following steps:
 1. Imports necessary libraries, including TensorFlow, NumPy, Pandas, OpenCV, and scikit-learn.
