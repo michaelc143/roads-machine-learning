@@ -27,7 +27,7 @@ import os
 import numpy as np
 import pandas as pd
 import cv2
-from google.cloud import storage
+# from google.cloud import storage
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -49,7 +49,7 @@ METADATA_PATH = 'metadata.csv'
 df = pd.read_csv(METADATA_PATH)
 
 # Directory containing all images
-IMAGE_DIR = 'images/'
+IMAGE_DIR = 'Images/'
 
 # Load and preprocess images
 image_size = (128, 128)
@@ -59,7 +59,7 @@ labels = []
 for index, row in df.iterrows():
     img_path = os.path.join(IMAGE_DIR, row['filename'])
     img = cv2.imread(img_path)
-    img = cv2.resize(img, image_size)
+    img = cv2.resize(img, (128, 128))
     img = img / 255.0  # Normalize pixel values
     images.append(img)
     labels.append(row['label'])

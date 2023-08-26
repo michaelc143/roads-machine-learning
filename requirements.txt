@@ -3,4 +3,5 @@ tensorflow
 numpy
 scikit-learn
 matplotlib
-opencv-python
+google.cloud
+# opencv-python
