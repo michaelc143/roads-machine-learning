@@ -35,16 +35,16 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropou
 from tensorflow.keras.callbacks import LearningRateScheduler
 
 # GCP setup to grab from bucket storage
-storage_client = storage.Client()
-bucket_name = 'clean_dirty_road_ml_bucket'
+# storage_client = storage.Client()
+# bucket_name = 'clean_dirty_road_ml_bucket'
 
-bucket = storage_client.bucket(bucket_name)
-blob = bucket.blob('metadata.csv')
-blob.download_to_filename('test-pull-from-gcp.csv')
-print('Pulled from GCP, check files')
+# bucket = storage_client.bucket(bucket_name)
+# blob = bucket.blob('metadata.csv')
+# blob.download_to_filename('test-pull-from-gcp.csv')
+# print('Pulled from GCP, check files')
 
 # Load metadata CSV
-METADATA_PATH = 'test-pull-from-gcp.csv'
+METADATA_PATH = 'metadata.csv'
 df = pd.read_csv(METADATA_PATH)
 
 # Directory containing all images
